@@ -95,6 +95,19 @@ public class Cell {
     }
 
     @Override
+    public boolean equals(Object o){
+        if (o.getClass() != this.getClass()) return false;
+        Cell temp = (Cell) o;
+        if (temp.getX() == this.getX() && temp.getY() == this.getY()) return true;
+        return false;
+    }
+
+    @Override
+    public int hashCode(){
+        return this.getX()*34 + getY();
+    }
+
+    @Override
     public String toString(){
         return "[" + x + ", " + y + "]";
     }

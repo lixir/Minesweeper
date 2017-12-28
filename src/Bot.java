@@ -10,6 +10,7 @@ public class Bot {
     List<Pair<Set<Cell>, Integer>> list = new ArrayList<>();
 
     public void start(GameField gameField) {
+        list = new ArrayList<>();
         search(gameField);
         equalityComparison();
         comparizon();
@@ -18,7 +19,11 @@ public class Bot {
 
     public List<Pair<Set<Cell>, Integer>> getList(){return list;}
 
-    private void search(GameField gameField) {
+    public void setList(List list){
+        this.list.addAll(list);
+    }
+
+    public void search(GameField gameField) {
         Set<Cell> set = new HashSet<>();
         Cell temp;
         for (int x = 0; x < Constants.COUNT_CELLS_X; x++)
@@ -56,7 +61,7 @@ public class Bot {
 //        System.out.println(list);
     }
 
-    private void equalityComparison(){
+    public void equalityComparison(){
         for (int i = 0; i < list.size(); i++)
             for (int j = i + 1; j < list.size(); j++){
                 if (list.get(i).getKey().equals(list.get(j).getKey())){
@@ -65,7 +70,7 @@ public class Bot {
         }
     }
 
-    private void comparizon(){
+    public void comparizon(){
         int temp;
         for (int i = 0; i < list.size(); i++)
             for (int j = 0; j < list.size(); j++){
@@ -81,35 +86,40 @@ public class Bot {
             }
     }
 
-    private void intersections(){
+    public void intersections(){
         int temp = 0;
         Set<Cell> tempCell = new HashSet<>();
         for (int i = 0; i < list.size(); i++)
             for (int j = i + 1; j < list.size(); j++){
                 for (Cell cell: list.get(i).getKey()){
                     if ((list.get(j).getKey()).contains(cell)){
-                        list.get(j).getKey().remove(cell);
-                        list.get(i).getKey().remove(cell);
+//                        list.get(j).getKey().remove(cell);
+//                        list.get(i).getKey().remove(cell);
                         temp++;
                         tempCell.add(cell);
                     }
                 }
-                temp = list.get(list.size() - 1).getValue();
+//                if (list.get(list.size() - 1).getKey().size() == 0/* && i >= list.size() - 1 && j >= list.size() - 1*/) {
+//                    list.remove(list.size() - 1);
+//                    if (i >= list.size() || j >= list.size()) continue;
+//                }
+//                temp = list.get(list.size() - 1).getValue();
                 if (list.get(i).getValue() - list.get(j).getValue() > 0){
-                    list.add(new Pair(tempCell, list.get(i).getValue() - list.get(j).getKey().size()));
-                    if (temp != list.get(j).getValue()) continue;
+                    list.add(new Pair(tempCell, list.get(i).getValue() - list.get(j).getKey().size() + temp));
+                    if (list.get(i).getValue() - list.get(j).getKey().size() + temp != list.get(j).getValue()) continue;
                 }
-
+                System.out.println("");
+                System.out.println(list);
                 if (list.get(j).getValue() - list.get(i).getValue() > 0){
-                    list.add(new Pair(tempCell, list.get(j).getValue() - list.get(i).getKey().size()));
-                    if (temp != list.get(i).getValue()) continue;
+                    list.add(new Pair(tempCell, list.get(j).getValue() - list.get(i).getKey().size() + temp));
+                    if (list.get(j).getValue() - list.get(i).getKey().size() + temp != list.get(i).getValue()) continue;
                 }
 
-                list.add(new Pair(list.get(i).getKey(), list.get(i).getValue() - temp));
-                list.add(new Pair(list.get(j).getKey(), list.get(j).getValue() - temp));
+                list.add(new Pair(list.get(i).getKey().removeAll(tempCell), list.get(i).getValue() - temp));
+                list.add(new Pair(list.get(j).getKey().removeAll(tempCell), list.get(j).getValue() - temp));
 
-                list.remove(j);
-                list.remove(i);
+//                list.remove(j);
+//                list.remove(i);
 
                 temp = 0;
                 tempCell = new HashSet<>();

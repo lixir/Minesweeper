@@ -66,6 +66,40 @@ public class GameField {
         return minesNear[x][y];
     }
 
+    public int getMarkedQuantity(){
+        int temp = 0;
+        for (int i = 0; i < theField.length; i++)
+            for (int j = 0; j < theField[i].length; j++){
+                if (theField[i][j].isMarked()) temp++;
+        }
+        return temp;
+    }
+
+    public int getMinesQuantity(){
+        int temp = 0;
+        for (int i = 0; i < theField.length; i++)
+            for (int j = 0; j < theField[i].length; j++){
+                if (theField[i][j].getState() == CellState.MINE) temp++;
+            }
+        return temp;
+    }
+
+    public int getBlackCellsQuantity(){
+        int temp = 0;
+        for (int i = 0; i < theField.length; i++)
+            for (int j = 0; j < theField[i].length; j++){
+                if (theField[i][j].isHiden() && !theField[i][j].isMarked()) temp++;
+            }
+        return temp;
+    }
+
+    public Cell getRandomBlackCell(){
+        for (int i = 0; i < theField.length; i++)
+            for (int j = 0; j < theField[i].length; j++){
+                if (theField[i][j].isHiden() && !theField[i][j].isMarked()) return theField[i][j];
+            }
+            throw new IllegalArgumentException();
+    }
     /**
      * Метод предназначен для обработки кликов по полю.
      *
@@ -118,5 +152,7 @@ public class GameField {
                 cell.show();
             }
         }
+        System.out.println(":(");
+        System.exit(7);
     }
 }

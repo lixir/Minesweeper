@@ -100,6 +100,7 @@ public class Main {
     }
 
     private static void inputBot(){
+        write();
         clicksStack = new LinkedList<Click>(){};
         List<Pair<Set<Cell>, Integer>> list = bot.getList();
         for (Pair<Set<Cell>, Integer> pair: list){
@@ -110,7 +111,7 @@ public class Main {
             }
             if (pair.getValue() == pair.getKey().size()){
                 for (Cell cell: pair.getKey()){
-                    clicksStack.add(new Click(cell.getX(), cell.getY(),1));
+                    if (!cell.isMarked()) clicksStack.add(new Click(cell.getX(), cell.getY(),1));
                 }
             }
 
@@ -119,7 +120,7 @@ public class Main {
             double min = 0.0;
             Cell temp = new Cell(false,-1,0);
             for (Pair<Set<Cell>, Integer> pair: list){
-                if (pair.getKey().size() / pair.getValue() > min){
+                if (pair.getValue() != 0 && pair.getKey().size() / pair.getValue() > min){
                     min = pair.getKey().size();
                     for (Cell cell: pair.getKey()){
                         temp = cell;
@@ -127,11 +128,15 @@ public class Main {
                     }
                 }
             }
+            if ((gameField.getMinesQuantity() - gameField.getMarkedQuantity()) != 0 &&
+                    gameField.getBlackCellsQuantity()/(gameField.getMinesQuantity() - gameField.getMarkedQuantity()) > min){
+                temp = gameField.getRandomBlackCell();
+            }
             if (temp.getX() != -1) {
                 clicksStack.add(new Click(temp.getX(), temp.getY(), 0));
             }
-            if (temp.getX() == -1) clicksStack.add(new Click((int) Math.random()*Constants.COUNT_CELLS_X,
-                    (int) Math.random()*Constants.COUNT_CELLS_Y, 0));
+            if (temp.getX() == -1) clicksStack.add(new Click((int) (Math.random()*Constants.COUNT_CELLS_X),
+                    (int) (Math.random()*Constants.COUNT_CELLS_Y), 0));
         }
     }
 
@@ -140,8 +145,9 @@ public class Main {
      *
      */
     private static void logic() {
-        if (bot != null) write();
         for(Click click : clicksStack) {
+            System.out.println(gameField.getMinesQuantity());
+            write();
             gameField.recieveClick(click);
         }
     }
