@@ -67,16 +67,17 @@ class BotTest {
             {
                 add(new Pair(
                         new HashSet<Cell>(){
+                            {add(new Cell(false, 0, 0));}
+                        }, 1));
+                add(new Pair(
+                        new HashSet<Cell>(){
                             {add(new Cell(true, 0, 1));}
                         }, 0));
                 add(new Pair(
                         new HashSet<Cell>(){
                             {add(new Cell(false, 1, 0));}
                         }, 0));
-                add(new Pair(
-                        new HashSet<Cell>(){
-                            {add(new Cell(false, 0, 0));}
-                        }, 1));
+
             }
         };
         assertEquals(bot.getList(), result);
